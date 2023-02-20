@@ -60,7 +60,7 @@ copy those two folders in to the android project past it inside the 'Document_sc
 
 ## 5) If your running in debug mode open the debug folder and drag the folders in to your root file
 
-<img src="/images/5.png" alt="Alt text" title="Optional title">
+<img src="images/5.png" alt="Alt text" title="Optional title">
 
 ## 6) Goto Build Phases and Click on Add Button
 
@@ -68,14 +68,14 @@ copy those two folders in to the android project past it inside the 'Document_sc
 
 ## 7) Add new Copy Files Phase and name it 'Embended Framework' and change Destination to 'Frameworks'
 
-<img src="https://github.com/MaduraDiasTreinetic/metafy_edge_detection_module_new/blob/f6a10e5b454a310e50615e69ffc5cbbf589036c4/images/2.png" alt="Alt text" title="Optional title">
+<img src="images/2.png" alt="Alt text" title="Optional title">
 
-<img src="https://github.com/MaduraDiasTreinetic/metafy_edge_detection_module_new/blob/f6a10e5b454a310e50615e69ffc5cbbf589036c4/images/3.png" alt="Alt text" title="Optional title">
+<img src="images/3.png" alt="Alt text" title="Optional title">
 
 ## 8) Again open the debug folder and drag and drop the files after drop it it will show like this
 
-<img src="https://github.com/MaduraDiasTreinetic/metafy_edge_detection_module_new/blob/f6a10e5b454a310e50615e69ffc5cbbf589036c4/images/4.png" alt="Alt text" title="Optional title">
+<img src="images/4.png" alt="Alt text" title="Optional title">
 
 ## after your folder structure will like this.
 
-<img src="https://github.com/MaduraDiasTreinetic/metafy_edge_detection_module_new/blob/7871e28c967c4a52fe0d428ac8e830ce381001fc/images/6.png" alt="Alt text" title="Optional title">
+<img src="images/6.png" alt="Alt text" title="Optional title">
