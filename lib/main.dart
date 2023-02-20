@@ -54,10 +54,14 @@ class _CameraAnimationState extends State<CameraAnimation> {
     );
 
     String token = res["token"];
-    backgroundColor = res["backgroundColor"];
-    iconColor = res["iconColor"];
-    borderColor = res["borderColor"];
-    progressIndicatorColor = res["progressIndicatorColor"];
+    try {
+      backgroundColor = Color(res["backgroundColor"]);
+      iconColor = Color(res["iconColor"]);
+      borderColor = Color(res["borderColor"]);
+      progressIndicatorColor = Color(res["progressIndicatorColor"]);
+    } catch (e) {
+      print(e);
+    }
 
     // String cropTitle = res["CropTitle"];
     // String cropBlackAndWhiteTitle = res["CropBlackAndWhiteTitle"];
