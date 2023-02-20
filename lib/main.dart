@@ -49,11 +49,15 @@ class _CameraAnimationState extends State<CameraAnimation> {
   }
 
   processImage() async {
-    // var res = await platform.invokeMethod(
-    //   'sendSettings',
-    // );
+    var res = await platform.invokeMethod(
+      'sendSettings',
+    );
 
-    //  String token = res["token"];
+    String token = res["token"];
+    backgroundColor = res["backgroundColor"];
+    iconColor = res["iconColor"];
+    borderColor = res["borderColor"];
+    progressIndicatorColor = res["progressIndicatorColor"];
 
     // String cropTitle = res["CropTitle"];
     // String cropBlackAndWhiteTitle = res["CropBlackAndWhiteTitle"];
@@ -63,19 +67,13 @@ class _CameraAnimationState extends State<CameraAnimation> {
     //     cropTitle: cropTitle,
     //     cropBlackAndWhiteTitle: cropBlackAndWhiteTitle);
 
-    if (ValidateToken().isValidToken(token: '1234')) {
+    if (ValidateToken().isValidToken(token: token)) {
       path = await ProcessImage()
           .getImageAndroid()
           .whenComplete(() => setState(() {}));
     } else {
       print("Error : Invalid access token, path Url: $path");
     }
-
-    print("path---->>>>>>> $path");
-
-    // platform.invokeMethod('getImageUrl', {
-    //   'url': path,
-    // });
   }
 
   @override
@@ -94,14 +92,16 @@ class _CameraAnimationState extends State<CameraAnimation> {
     } else {
       return ImageView(
         path: path!,
+        backgroundColor: backgroundColor,
+        borderColor: borderColor,
+        iconColor: iconColor,
         onDone: (path) {
-          // platform.invokeMethod('getImageUrl', {
-          //   'url': path,
-          // });
+          platform.invokeMethod('getImageUrl', {
+            'url': path,
+          });
           print("new path ---->>>>>>> ${path.toString()}");
         },
       );
-      // return Image.network(path!);
     }
   }
 }
