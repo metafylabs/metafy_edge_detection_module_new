@@ -37,9 +37,9 @@ class _CameraAnimationState extends State<CameraAnimation> {
       MethodChannel('com.example.metafy_edge_detection_module');
 
   String? path;
-  Color? backgroundColor;
-  Color? iconColor;
-  Color? borderColor;
+  Color? backgroundColor = Colors.black;
+  Color? iconColor = Colors.white;
+  Color? borderColor = Colors.white;
   Color? progressIndicatorColor = Colors.white;
 
   @override

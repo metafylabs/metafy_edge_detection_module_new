@@ -11,9 +11,9 @@ class ImageView extends StatefulWidget {
       {Key? key,
       required this.path,
       required this.onDone,
-      this.backgroundColor = Colors.black,
-      this.iconColor = Colors.white,
-      this.borderColor = Colors.white})
+      required this.backgroundColor,
+      required this.iconColor,
+      required this.borderColor})
       : super(key: key);
   final String path;
   final Function onDone;
