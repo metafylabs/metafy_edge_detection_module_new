@@ -60,11 +60,11 @@ copy those two folders in to the android project past it inside the 'Document_sc
 
 ## 5) If your running in debug mode open the debug folder and drag the folders in to your root file
 
-<img src="https://github.com/MaduraDiasTreinetic/metafy_edge_detection_module_new/blob/8f57155b2cde5a9c9d6458349f94a38a1f64b406/images/5.png" alt="Alt text" title="Optional title">
+<img src="/images/5.png" alt="Alt text" title="Optional title">
 
 ## 6) Goto Build Phases and Click on Add Button
 
-<img src="https://github.com/MaduraDiasTreinetic/metafy_edge_detection_module_new/blob/f6a10e5b454a310e50615e69ffc5cbbf589036c4/images/1.png" alt="Alt text" title="Optional title">
+<img src="images/1.png" alt="Alt text" title="Optional title">
 
 ## 7) Add new Copy Files Phase and name it 'Embended Framework' and change Destination to 'Frameworks'
 
