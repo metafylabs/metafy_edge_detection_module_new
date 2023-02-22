@@ -37,10 +37,9 @@ class _CameraAnimationState extends State<CameraAnimation> {
       MethodChannel('com.example.metafy_edge_detection_module');
 
   String? path;
-  Color? backgroundColor = Colors.black;
-  Color? iconColor = Colors.white;
-  Color? borderColor = Colors.white;
-  Color? progressIndicatorColor = Colors.white;
+  var backgroundColor;
+  var buttonColor;
+  var progressIndicatorColor;
 
   @override
   void initState() {
@@ -55,28 +54,27 @@ class _CameraAnimationState extends State<CameraAnimation> {
 
     String token = res["token"];
     try {
-      backgroundColor = Color(res["backgroundColor"]);
-      iconColor = Color(res["iconColor"]);
-      borderColor = Color(res["borderColor"]);
-      progressIndicatorColor = Color(res["progressIndicatorColor"]);
+      backgroundColor = res["backgroundColor"];
+      buttonColor = res["buttonColor"];
+      progressIndicatorColor = res["progressIndicatorColor"];
     } catch (e) {
       print(e);
+      rethrow;
     }
 
-    // String cropTitle = res["CropTitle"];
-    // String cropBlackAndWhiteTitle = res["CropBlackAndWhiteTitle"];
-
-    // String path = await ProcessImage().getImageIos(
-    //     scanTitle: scanTitle,
-    //     cropTitle: cropTitle,
-    //     cropBlackAndWhiteTitle: cropBlackAndWhiteTitle);
-
     if (ValidateToken().isValidToken(token: token)) {
-      path = await ProcessImage()
-          .getImageAndroid()
-          .whenComplete(() => setState(() {}));
+      try {
+        path = await ProcessImage()
+            .getImageAndroid(
+                backgroundColor: backgroundColor, buttonColor: buttonColor)
+            .whenComplete(() => setState(() {}));
+      } catch (e) {
+        print("Error : Image processing error : $e");
+        rethrow;
+      }
     } else {
       print("Error : Invalid access token, path Url: $path");
+      throw ("Invalid access token");
     }
   }
 
@@ -86,7 +84,7 @@ class _CameraAnimationState extends State<CameraAnimation> {
       return Container(
         width: double.infinity,
         height: double.infinity,
-        color: backgroundColor,
+        color: Color(backgroundColor).withOpacity(1),
         child: Center(
           child: CircularProgressIndicator(
             color: progressIndicatorColor,
@@ -96,14 +94,12 @@ class _CameraAnimationState extends State<CameraAnimation> {
     } else {
       return ImageView(
         path: path!,
-        backgroundColor: backgroundColor,
-        borderColor: borderColor,
-        iconColor: iconColor,
+        backgroundColor: Color(backgroundColor).withOpacity(1),
+        buttonColor: Color(buttonColor).withOpacity(1),
         onDone: (path) {
           platform.invokeMethod('getImageUrl', {
             'url': path,
           });
-          print("new path ---->>>>>>> ${path.toString()}");
         },
       );
     }

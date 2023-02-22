@@ -38,16 +38,20 @@ class ProcessImage {
     }
   }
 
-  Future<String> getImageAndroid() async {
+  Future<String> getImageAndroid(
+      {required var backgroundColor, required var buttonColor}) async {
     String path = "";
     try {
       List<String> pictures = [];
       try {
-        pictures = await CunningDocumentScanner.getPictures() ?? [];
+        pictures = await CunningDocumentScanner.getPictures(
+                buttonColor, backgroundColor) ??
+            [];
 
         print(pictures);
       } catch (exception) {
         print(exception);
+        rethrow;
         // Handle exception here
       }
       path = pictures.first.toString();
@@ -55,6 +59,7 @@ class ProcessImage {
       print('----------->>>>>>>>>> image path $path');
     } catch (e) {
       print(e);
+      rethrow;
     }
     return path;
   }

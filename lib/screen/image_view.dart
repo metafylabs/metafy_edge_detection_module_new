@@ -7,20 +7,18 @@ import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
 
 class ImageView extends StatefulWidget {
-  const ImageView(
-      {Key? key,
-      required this.path,
-      required this.onDone,
-      required this.backgroundColor,
-      required this.iconColor,
-      required this.borderColor})
-      : super(key: key);
+  const ImageView({
+    Key? key,
+    required this.path,
+    required this.onDone,
+    required this.backgroundColor,
+    required this.buttonColor,
+  }) : super(key: key);
   final String path;
   final Function onDone;
 
   final Color? backgroundColor;
-  final Color? iconColor;
-  final Color? borderColor;
+  final Color? buttonColor;
 
   @override
   ImageViewState createState() => ImageViewState();
@@ -52,7 +50,6 @@ class ImageViewState extends State<ImageView> {
 
   void rotateImage() async {
     try {
-      generateFilePath();
       final newFile = await File(_path!).copy(generateFilePath());
 
       Uint8List imageBytes = await newFile.readAsBytes();
@@ -104,27 +101,27 @@ class ImageViewState extends State<ImageView> {
                       },
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(
-                            side: BorderSide(color: widget.borderColor!)),
+                            side: BorderSide(color: widget.buttonColor!)),
                         padding: const EdgeInsets.all(20),
                         backgroundColor: Colors.transparent,
                       ),
                       child: Icon(
                         Icons.rotate_90_degrees_cw_rounded,
                         size: 30,
-                        color: widget.iconColor,
+                        color: widget.buttonColor,
                       )),
                   ElevatedButton(
                       onPressed: () => widget.onDone(_path),
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(
-                            side: BorderSide(color: widget.borderColor!)),
+                            side: BorderSide(color: widget.buttonColor!)),
                         padding: const EdgeInsets.all(20),
                         backgroundColor: Colors.transparent,
                       ),
                       child: Icon(
                         Icons.done,
                         size: 30,
-                        color: widget.iconColor,
+                        color: widget.buttonColor,
                       )),
                 ],
               )
