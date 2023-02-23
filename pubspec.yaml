@@ -34,7 +34,9 @@ dependencies:
   cunning_document_scanner:
     git:
       url: https://github.com/metafylabs/metafy_document_scanner_plugin.git
-      ref: main
+      ref: remove_permission_handler
+
+  permission_handler: ^10.0.0
 
 dev_dependencies:
   flutter_test:

@@ -8,6 +8,7 @@ import 'package:metafy_edge_detection_module/service/process_image.dart';
 import 'package:metafy_edge_detection_module/service/validate_token.dart';
 
 import 'package:image/image.dart' as img;
+import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(const MyApp());
 
@@ -64,6 +65,13 @@ class _CameraAnimationState extends State<CameraAnimation> {
 
     if (ValidateToken().isValidToken(token: token)) {
       try {
+        Map<Permission, PermissionStatus> statuses = await [
+          Permission.camera,
+        ].request();
+        if (statuses.containsValue(PermissionStatus.denied)) {
+          throw Exception("Permission not granted");
+        }
+
         path = await ProcessImage()
             .getImageAndroid(
                 backgroundColor: backgroundColor, buttonColor: buttonColor)
@@ -73,8 +81,7 @@ class _CameraAnimationState extends State<CameraAnimation> {
         rethrow;
       }
     } else {
-      print("Error : Invalid access token, path Url: $path");
-      throw ("Invalid access token");
+      throw Exception("Invalid access token");
     }
   }
 
