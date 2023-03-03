@@ -66,7 +66,7 @@ class ImageViewState extends State<ImageView> {
         _path = fixedFile.path;
       });
     } catch (e) {
-      print(e);
+      rethrow;
     }
   }
 

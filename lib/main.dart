@@ -1,14 +1,12 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:metafy_edge_detection_module/screen/image_view.dart';
 import 'package:metafy_edge_detection_module/service/process_image.dart';
 import 'package:metafy_edge_detection_module/service/validate_token.dart';
-
-import 'package:image/image.dart' as img;
-import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(const MyApp());
 
@@ -38,9 +36,9 @@ class _CameraAnimationState extends State<CameraAnimation> {
       MethodChannel('com.example.metafy_edge_detection_module');
 
   String? path;
-  var backgroundColor;
-  var buttonColor;
-  var progressIndicatorColor;
+  var backgroundColor = 0x20262E;
+  var buttonColor = 0xE9E8E8;
+  var progressIndicatorColor = 0xE9E8E8;
 
   @override
   void initState() {
@@ -52,12 +50,13 @@ class _CameraAnimationState extends State<CameraAnimation> {
     var res = await platform.invokeMethod(
       'sendSettings',
     );
+    print("Settings--->>>> ${res}");
 
     String token = res["token"];
     try {
-      backgroundColor = res["backgroundColor"];
-      buttonColor = res["buttonColor"];
-      progressIndicatorColor = res["progressIndicatorColor"];
+      // backgroundColor = res["backgroundColor"];
+      // buttonColor = res["buttonColor"];
+      // progressIndicatorColor = res["progressIndicatorColor"];
     } catch (e) {
       print(e);
       rethrow;
@@ -65,19 +64,23 @@ class _CameraAnimationState extends State<CameraAnimation> {
 
     if (ValidateToken().isValidToken(token: token)) {
       try {
-        Map<Permission, PermissionStatus> statuses = await [
-          Permission.camera,
-        ].request();
-        if (statuses.containsValue(PermissionStatus.denied)) {
-          throw Exception("Permission not granted");
-        }
+        if (Platform.isAndroid) {
+          Map<Permission, PermissionStatus> statuses = await [
+            Permission.camera,
+          ].request();
 
-        path = await ProcessImage()
-            .getImageAndroid(
-                backgroundColor: backgroundColor, buttonColor: buttonColor)
-            .whenComplete(() => setState(() {}));
+          if (statuses.containsValue(PermissionStatus.denied)) {
+            throw Exception("Permission not granted");
+          }
+        } else {
+          path = await ProcessImage()
+              .getImageUrl(
+                  backgroundColor: backgroundColor, buttonColor: buttonColor)
+              .whenComplete(() => setState(() {}));
+          setState(() {});
+          platform.invokeMethod('callFlutterView');
+        }
       } catch (e) {
-        print("Error : Image processing error : $e");
         rethrow;
       }
     } else {
@@ -94,7 +97,7 @@ class _CameraAnimationState extends State<CameraAnimation> {
         color: Color(backgroundColor).withOpacity(1),
         child: Center(
           child: CircularProgressIndicator(
-            color: progressIndicatorColor,
+            color: Color(progressIndicatorColor).withOpacity(1),
           ),
         ),
       );
