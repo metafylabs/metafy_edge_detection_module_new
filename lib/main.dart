@@ -39,6 +39,8 @@ class _CameraAnimationState extends State<CameraAnimation> {
   var backgroundColor = 0x20262E;
   var buttonColor = 0xE9E8E8;
   var progressIndicatorColor = 0xE9E8E8;
+  var cropperActiveIconColor = 0xFFA500;
+  String cropperTitle = "Cropper";
 
   @override
   void initState() {
@@ -46,7 +48,7 @@ class _CameraAnimationState extends State<CameraAnimation> {
     super.initState();
   }
 
-  processImage() async {
+  Future<void> processImage() async {
     var res = await platform.invokeMethod(
       'sendSettings',
     );
@@ -54,9 +56,11 @@ class _CameraAnimationState extends State<CameraAnimation> {
 
     String token = res["token"];
     try {
-      // backgroundColor = res["backgroundColor"];
-      // buttonColor = res["buttonColor"];
-      // progressIndicatorColor = res["progressIndicatorColor"];
+      backgroundColor = res["backgroundColor"];
+      buttonColor = res["buttonColor"];
+      progressIndicatorColor = res["progressIndicatorColor"];
+      cropperActiveIconColor = res["cropperActiveIconColor"];
+      cropperTitle = res['cropperTitle'];
     } catch (e) {
       print(e);
       rethrow;
@@ -72,6 +76,11 @@ class _CameraAnimationState extends State<CameraAnimation> {
           if (statuses.containsValue(PermissionStatus.denied)) {
             throw Exception("Permission not granted");
           }
+          path = await ProcessImage()
+              .getImageUrl(
+                  backgroundColor: backgroundColor, buttonColor: buttonColor)
+              .whenComplete(() => setState(() {}));
+          print("image path flutter-------->>>>>> $path");
         } else {
           path = await ProcessImage()
               .getImageUrl(
@@ -106,7 +115,11 @@ class _CameraAnimationState extends State<CameraAnimation> {
         path: path!,
         backgroundColor: Color(backgroundColor).withOpacity(1),
         buttonColor: Color(buttonColor).withOpacity(1),
+        cropperTittle: cropperTitle,
+        progressBarColor: Color(progressIndicatorColor).withOpacity(1),
+        cropperActiveIconColor:Color(cropperActiveIconColor).withOpacity(1),
         onDone: (path) {
+          print("cropped path----------->>>------------------------- $path");
           platform.invokeMethod('getImageUrl', {
             'url': path,
           });

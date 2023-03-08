@@ -5,20 +5,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:image/image.dart' as img;
+import 'package:image_cropper/image_cropper.dart';
 
 class ImageView extends StatefulWidget {
-  const ImageView({
-    Key? key,
-    required this.path,
-    required this.onDone,
-    required this.backgroundColor,
-    required this.buttonColor,
-  }) : super(key: key);
+  const ImageView(
+      {Key? key,
+      required this.path,
+      required this.onDone,
+      required this.backgroundColor,
+      required this.buttonColor,
+      required this.progressBarColor,
+      required this.cropperActiveIconColor,
+      required this.cropperTittle})
+      : super(key: key);
   final String path;
+  final String cropperTittle;
   final Function onDone;
 
   final Color? backgroundColor;
   final Color? buttonColor;
+  final Color? progressBarColor;
+  final Color? cropperActiveIconColor;
 
   @override
   ImageViewState createState() => ImageViewState();
@@ -31,6 +38,7 @@ class ImageViewState extends State<ImageView> {
     setState(() {
       _path = widget.path;
     });
+    cropImage();
     super.initState();
   }
 
@@ -70,63 +78,39 @@ class ImageViewState extends State<ImageView> {
     }
   }
 
+  void cropImage() async {
+    print("call crop image--------->>>>>>");
+    final newFile = await File(_path!).copy(generateFilePath());
+
+    var croppedFile = await ImageCropper().cropImage(
+        sourcePath: newFile.path,
+        compressFormat: ImageCompressFormat.jpg,
+        compressQuality: 100,
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: widget.cropperTittle,
+              toolbarColor: widget.backgroundColor,
+              toolbarWidgetColor: widget.buttonColor,
+              activeControlsWidgetColor: widget.cropperActiveIconColor,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: widget.cropperTittle,
+          ),
+        ]);
+    print("cropImage-------->>>>> $croppedFile");
+    widget.onDone(croppedFile!.path);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: widget.backgroundColor,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 2,
-                child: Image.file(
-                  File(_path!),
-                  fit: BoxFit.contain,
-                  alignment: Alignment.center,
-                ),
-              ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height / 5,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        rotateImage();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        shape: CircleBorder(
-                            side: BorderSide(color: widget.buttonColor!)),
-                        padding: const EdgeInsets.all(20),
-                        backgroundColor: Colors.transparent,
-                      ),
-                      child: Icon(
-                        Icons.rotate_90_degrees_cw_rounded,
-                        size: 30,
-                        color: widget.buttonColor,
-                      )),
-                  ElevatedButton(
-                      onPressed: () => widget.onDone(_path),
-                      style: ElevatedButton.styleFrom(
-                        shape: CircleBorder(
-                            side: BorderSide(color: widget.buttonColor!)),
-                        padding: const EdgeInsets.all(20),
-                        backgroundColor: Colors.transparent,
-                      ),
-                      child: Icon(
-                        Icons.done,
-                        size: 30,
-                        color: widget.buttonColor,
-                      )),
-                ],
-              )
-            ],
-          ),
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: widget.backgroundColor,
+      child: Center(
+        child: CircularProgressIndicator(
+          color: widget.progressBarColor,
         ),
       ),
     );
