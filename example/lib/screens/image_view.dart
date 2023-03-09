@@ -191,6 +191,10 @@ class ImageViewState extends State<ImageView> {
     var bytes = data!.buffer.asUint8List();
     var path = await File(newFile.path).writeAsBytes(bytes);
 
+    setState(() {
+      isLoading = false;
+    });
     widget.onDone(path.path);
+    return;
   }
 }

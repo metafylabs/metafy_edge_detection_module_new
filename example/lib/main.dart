@@ -1,23 +1,26 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import 'package:metafy_edge_detection_module/screen/image_view.dart';
-import 'package:metafy_edge_detection_module/service/process_image.dart';
-import 'package:metafy_edge_detection_module/service/validate_token.dart';
+import 'screens/image_view.dart';
+import 'service/process_image.dart';
+import 'service/validate_token.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: CameraAnimation(),
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(),
+      home: const CameraAnimation(),
     );
   }
 }
@@ -32,8 +35,8 @@ class CameraAnimation extends StatefulWidget {
 }
 
 class _CameraAnimationState extends State<CameraAnimation> {
-  static const platform =
-      MethodChannel('com.example.metafy_edge_detection_module');
+  // static const platform =
+  //     MethodChannel('com.example.metafy_edge_detection_module');
 
   String? path;
   var backgroundColor = 0x20262E;
@@ -49,24 +52,24 @@ class _CameraAnimationState extends State<CameraAnimation> {
   }
 
   Future<void> processImage() async {
-    var res = await platform.invokeMethod(
-      'sendSettings',
-    );
-    print("Settings--->>>> ${res}");
+    // var res = await platform.invokeMethod(
+    //   'sendSettings',
+    // );
+    // print("Settings--->>>> ${res}");
 
-    String token = res["token"];
+    // String token = res["token"];
     try {
-      backgroundColor = res["backgroundColor"];
-      buttonColor = res["buttonColor"];
-      progressIndicatorColor = res["progressIndicatorColor"];
-      cropperActiveIconColor = res["cropperActiveIconColor"];
-      cropperTitle = res['cropperTitle'];
+      // backgroundColor = res["backgroundColor"];
+      // buttonColor = res["buttonColor"];
+      // progressIndicatorColor = res["progressIndicatorColor"];
+      // cropperActiveIconColor = res["cropperActiveIconColor"];
+      // cropperTitle = res['cropperTitle'];
     } catch (e) {
       print(e);
       rethrow;
     }
 
-    if (ValidateToken().isValidToken(token: token)) {
+    if (ValidateToken().isValidToken(token: "1234")) {
       try {
         if (Platform.isAndroid) {
           Map<Permission, PermissionStatus> statuses = await [
@@ -87,7 +90,7 @@ class _CameraAnimationState extends State<CameraAnimation> {
                   backgroundColor: backgroundColor, buttonColor: buttonColor)
               .whenComplete(() => setState(() {}));
           setState(() {});
-          platform.invokeMethod('callFlutterView');
+          // platform.invokeMethod('callFlutterView');
         }
       } catch (e) {
         rethrow;
@@ -120,9 +123,9 @@ class _CameraAnimationState extends State<CameraAnimation> {
         cropperActiveIconColor: Color(cropperActiveIconColor).withOpacity(1),
         onDone: (path) {
           print("cropped path----------->>>------------------------- $path");
-          platform.invokeMethod('getImageUrl', {
-            'url': path,
-          });
+          // platform.invokeMethod('getImageUrl', {
+          //   'url': path,
+          // });
         },
       );
     }
